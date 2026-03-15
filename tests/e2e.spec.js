@@ -130,6 +130,24 @@ B: x, y`,
     assert.ok(randomResult.stderr.includes("Used seed: 42"));
   });
 
+  it("supports Windows-style short options", () => {
+    const caseResult = runCli([caseSensitiveModelPath, "/c"]);
+    assert.equal(caseResult.status, 0);
+    assert.ok(caseResult.stdout.includes("OS\tos"));
+
+    const orderResult = runCli([basicModelPath, "/o:1"]);
+    assert.equal(orderResult.status, 0);
+    assert.ok(orderResult.stdout.includes("A\tB"));
+
+    const seedResult = runCli([seedModelPath, `/e:${seedFilePath}`]);
+    assert.equal(seedResult.status, 0);
+    assert.ok(seedResult.stdout.includes("0\t0\t0\t0"));
+
+    const randomResult = runCli([basicModelPath, "/r:42"]);
+    assert.equal(randomResult.status, 0);
+    assert.ok(randomResult.stderr.includes("Used seed: 42"));
+  });
+
   it("rejects unsupported syntax and bad usage", () => {
     const noArgsResult = runCli([]);
     assert.equal(noArgsResult.status, 3);
@@ -166,10 +184,44 @@ B: x, y`,
       ),
     );
 
-    const slashOptionResult = runCli([basicModelPath, "/o:1"]);
-    assert.equal(slashOptionResult.status, 3);
+    const slashMissingValueResult = runCli([basicModelPath, "/o"]);
+    assert.equal(slashMissingValueResult.status, 3);
     assert.ok(
-      slashOptionResult.stderr.includes("Input Error: Unknown option: /o:1"),
+      slashMissingValueResult.stderr.includes(
+        "Input Error: Unknown option: /o",
+      ),
+    );
+
+    const slashBooleanValueResult = runCli([basicModelPath, "/c:true"]);
+    assert.equal(slashBooleanValueResult.status, 3);
+    assert.ok(
+      slashBooleanValueResult.stderr.includes(
+        "Input Error: Unknown option: /c:true",
+      ),
+    );
+
+    const unknownSlashOptionResult = runCli([basicModelPath, "/x"]);
+    assert.equal(unknownSlashOptionResult.status, 3);
+    assert.ok(
+      unknownSlashOptionResult.stderr.includes(
+        "Input Error: Unknown option: /x",
+      ),
+    );
+
+    const unknownSlashValueOptionResult = runCli([basicModelPath, "/x:1"]);
+    assert.equal(unknownSlashValueOptionResult.status, 3);
+    assert.ok(
+      unknownSlashValueOptionResult.stderr.includes(
+        "Input Error: Unknown option: /x:1",
+      ),
+    );
+
+    const duplicateMixedOptionResult = runCli([basicModelPath, "-c", "/c"]);
+    assert.equal(duplicateMixedOptionResult.status, 3);
+    assert.ok(
+      duplicateMixedOptionResult.stderr.includes(
+        "Input Error: Option 'c' was provided more than once",
+      ),
     );
 
     const equalsOptionResult = runCli([basicModelPath, "-o=1"]);

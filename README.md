@@ -73,12 +73,17 @@ Usage: pict-cli model [options]
 | `-c`        | Enable case-sensitive model evaluation.           |
 | `-s`        | Show model statistics instead of generated cases. |
 
+In addition to the Unix-style forms above, `pict-cli` also accepts Windows-style
+short options such as `/c`, `/o:3`, and `/e:seed.tsv`.
+
 Examples:
 
 ```bash
 pict-cli model.txt -o 3 -c
 pict-cli model.txt -r 42
 pict-cli model.txt -e seed.tsv
+pict-cli model.txt /o:3 /c
+pict-cli model.txt /e:seed.tsv
 cat model.txt | pict-cli -
 npx pict-cli model.txt -s
 ```
@@ -86,7 +91,7 @@ npx pict-cli model.txt -s
 ## Compatibility and Limitations
 
 - Only short options are supported.
-- Slash-style syntax such as `/o:3` is not supported.
+- Windows-style short options are also accepted as `/x` and `/x:value`.
 - Exactly one model argument is required.
 - Use `-` as the model argument to read the model from standard input.
 

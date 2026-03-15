@@ -56,35 +56,69 @@ function inputError(message) {
   return new CliError(PictErrorCode.BadOption, `Input Error: ${message}`);
 }
 
-function rejectUnsupportedSyntax(rawArgs) {
+function normalizeArgs(rawArgs) {
+  const normalizedArgs = [];
+  const normalizedSources = [];
+
   for (const arg of rawArgs) {
+    const slashBooleanMatch = /^\/([A-Za-z])$/.exec(arg);
+    if (slashBooleanMatch) {
+      const optionName = slashBooleanMatch[1];
+      if (optionName in OPTIONS && OPTIONS[optionName].type === "boolean") {
+        normalizedArgs.push(`-${optionName}`);
+        normalizedSources.push(arg);
+        continue;
+      }
+    }
+
+    const slashStringMatch = /^\/([A-Za-z]):([\s\S]*)$/.exec(arg);
+    if (slashStringMatch) {
+      const [, optionName, optionValue] = slashStringMatch;
+      if (optionName in OPTIONS && OPTIONS[optionName].type === "string") {
+        normalizedArgs.push(`-${optionName}`, optionValue);
+        normalizedSources.push(arg, arg);
+        continue;
+      }
+    }
+
+    normalizedArgs.push(arg);
+    normalizedSources.push(arg);
+  }
+
+  return { normalizedArgs, normalizedSources };
+}
+
+function rejectUnsupportedSyntax(args, argSources) {
+  for (const [index, arg] of args.entries()) {
+    const source = argSources[index] ?? arg;
+
     if (/^--[^-]/.test(arg)) {
-      throw inputError(`Unknown option: ${arg}`);
+      throw inputError(`Unknown option: ${source}`);
     }
 
     if (/^\/[A-Za-z](?::.*)?$/.test(arg) || arg === "/?") {
-      throw inputError(`Unknown option: ${arg}`);
+      throw inputError(`Unknown option: ${source}`);
     }
 
     if (/^-[A-Za-z]=/.test(arg)) {
-      throw inputError(`Unknown option: ${arg}`);
+      throw inputError(`Unknown option: ${source}`);
     }
 
     if (/^-[A-Za-z]:/.test(arg)) {
-      throw inputError(`Unknown option: ${arg}`);
+      throw inputError(`Unknown option: ${source}`);
     }
 
     if (/^-[A-Za-z]{2,}$/.test(arg)) {
-      throw inputError(`Unknown option: ${arg}`);
+      throw inputError(`Unknown option: ${source}`);
     }
   }
 }
 
-function getOptionSource(token, rawArgs) {
-  return rawArgs[token.index] ?? token.rawName;
+function getOptionSource(token, argSources) {
+  return argSources[token.index] ?? token.rawName;
 }
 
-function validateTokens(parsed, rawArgs) {
+function validateTokens(parsed, argSources) {
   const seenOptions = new Set();
   const optionSources = new Map();
 
@@ -94,7 +128,7 @@ function validateTokens(parsed, rawArgs) {
     }
 
     if (!(token.name in OPTIONS)) {
-      throw inputError(`Unknown option: ${getOptionSource(token, rawArgs)}`);
+      throw inputError(`Unknown option: ${getOptionSource(token, argSources)}`);
     }
 
     if (seenOptions.has(token.name)) {
@@ -102,7 +136,7 @@ function validateTokens(parsed, rawArgs) {
     }
 
     seenOptions.add(token.name);
-    optionSources.set(token.name, getOptionSource(token, rawArgs));
+    optionSources.set(token.name, getOptionSource(token, argSources));
   }
 
   return optionSources;
@@ -139,16 +173,17 @@ function buildRunConfig(rawArgs) {
     throw usageError();
   }
 
-  rejectUnsupportedSyntax(rawArgs);
+  const { normalizedArgs, normalizedSources } = normalizeArgs(rawArgs);
+  rejectUnsupportedSyntax(normalizedArgs, normalizedSources);
 
   const parsed = parseArgs({
-    args: rawArgs,
+    args: normalizedArgs,
     options: OPTIONS,
     allowPositionals: true,
     strict: false,
     tokens: true,
   });
-  const optionSources = validateTokens(parsed, rawArgs);
+  const optionSources = validateTokens(parsed, normalizedSources);
 
   if (parsed.positionals.length !== 1) {
     if (parsed.positionals.length === 0) {

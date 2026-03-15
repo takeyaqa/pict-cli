@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
 import { readFile } from "node:fs/promises";
-import { argv, exit, stderr, stdout } from "node:process";
+import { argv, exit, stderr, stdin, stdout } from "node:process";
 import { parseArgs } from "node:util";
 import { PictError, PictErrorCode, PictRunner } from "@takeyaqa/pict-wasm";
 
 const USAGE = `Pairwise Independent Combinatorial Testing
 
 Usage: pict-cli model [options]
+
+model may be a file path or - to read from standard input.
 
 Options:
   -o N|max  Order of combinations (default: 2)
@@ -152,7 +154,7 @@ function buildRunConfig(rawArgs) {
     if (parsed.positionals.length === 0) {
       throw usageError();
     }
-    throw inputError("Exactly one model file path is required");
+    throw inputError("Exactly one model argument is required");
   }
 
   const orderOfCombinations = getRequiredString(
@@ -230,6 +232,35 @@ async function readHostFile(filePath, errorCode) {
   }
 }
 
+async function readStdin() {
+  return await new Promise((resolve, reject) => {
+    let text = "";
+    stdin.setEncoding("utf8");
+    stdin.on("data", (chunk) => {
+      text += chunk;
+    });
+    stdin.on("end", () => {
+      resolve(text);
+    });
+    stdin.on("error", () => {
+      reject(
+        new CliError(
+          PictErrorCode.BadModel,
+          "Input Error: Couldn't read standard input",
+        ),
+      );
+    });
+  });
+}
+
+async function readModelText(modelArg) {
+  if (modelArg === "-") {
+    return await readStdin();
+  }
+
+  return await readHostFile(modelArg, PictErrorCode.BadModel);
+}
+
 function formatResult(result) {
   return [result.header, ...result.body]
     .map((row) => row.join("\t"))
@@ -238,10 +269,7 @@ function formatResult(result) {
 
 async function main(rawArgs) {
   const config = buildRunConfig(rawArgs);
-  const modelText = await readHostFile(
-    config.modelPath,
-    PictErrorCode.BadModel,
-  );
+  const modelText = await readModelText(config.modelPath);
 
   if (config.seedFilePath !== undefined) {
     config.options.seedRowsText = await readHostFile(

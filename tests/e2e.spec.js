@@ -8,11 +8,15 @@ import { after, before, describe, it } from "node:test";
 
 const CLI_PATH = resolve(cwd(), "bin/cli.js");
 
-function runCli(args) {
+function runCli(args, options = {}) {
+  const { env: optionsEnv, ...restOptions } = options;
+  const mergedEnv = { ...env, NODE_NO_WARNINGS: "1", ...(optionsEnv ?? {}) };
+
   return spawnSync(execPath, [CLI_PATH, ...args], {
     cwd: cwd(),
     encoding: "utf8",
-    env: { ...env, NODE_NO_WARNINGS: "1" },
+    env: mergedEnv,
+    ...restOptions,
   });
 }
 
@@ -85,6 +89,24 @@ A: x, y`,
     ]);
   });
 
+  it("runs a model from standard input when model is '-'", () => {
+    const result = runCli(["-"], {
+      input: `A: 0, 1
+B: x, y`,
+    });
+    const outputLines = result.stdout.trim().split("\n");
+
+    assert.equal(result.status, 0);
+    assert.equal(result.stderr, "");
+    assert.equal(outputLines[0], "A\tB");
+    assert.deepEqual(outputLines.slice(1).sort(), [
+      "0\tx",
+      "0\ty",
+      "1\tx",
+      "1\ty",
+    ]);
+  });
+
   it("supports documented short options", () => {
     const orderResult = runCli([basicModelPath, "-o", "1"]);
     assert.equal(orderResult.status, 0);
@@ -140,7 +162,7 @@ A: x, y`,
     assert.equal(extraPositionalResult.status, 3);
     assert.ok(
       extraPositionalResult.stderr.includes(
-        "Input Error: Exactly one model file path is required",
+        "Input Error: Exactly one model argument is required",
       ),
     );
 
@@ -173,6 +195,14 @@ A: x, y`,
     assert.ok(
       bareRandomResult.stderr.includes("Input Error: Unknown option: -r"),
     );
+
+    const extraPositionalWithStdinResult = runCli(["-", basicModelPath]);
+    assert.equal(extraPositionalWithStdinResult.status, 3);
+    assert.ok(
+      extraPositionalWithStdinResult.stderr.includes(
+        "Input Error: Exactly one model argument is required",
+      ),
+    );
   });
 
   it("propagates wasm and host file errors as exit codes", () => {
@@ -195,5 +225,12 @@ A: x, y`,
         `Input Error: Couldn't open file: ${missingSeedPath}`,
       ),
     );
+
+    const invalidStdinModelResult = runCli(["-"], {
+      input: `A: 0, 1
+A: x, y`,
+    });
+    assert.equal(invalidStdinModelResult.status, 4);
+    assert.ok(invalidStdinModelResult.stderr.includes("Input Error:"));
   });
 });

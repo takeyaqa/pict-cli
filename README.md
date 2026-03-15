@@ -19,7 +19,7 @@ npm install --global pict-cli
 Run it without a global install for one-off usage:
 
 ```bash
-npx pict-cli <model-file>
+npx pict-cli <model>
 ```
 
 Use `npx` for ad hoc runs. Use a global install when you expect to run the command repeatedly on the same machine.
@@ -60,7 +60,7 @@ The generated result is written as tab-separated text.
 Usage: pict-cli model [options]
 ```
 
-`model` must be exactly one model file path.
+`model` must be exactly one argument: either a model file path or `-` to read the model from standard input.
 
 | Option      | Description                                       |
 | ----------- | ------------------------------------------------- |
@@ -79,6 +79,7 @@ Examples:
 pict-cli model.txt -o 3 -c
 pict-cli model.txt -r 42
 pict-cli model.txt -e seed.tsv
+cat model.txt | pict-cli -
 npx pict-cli model.txt -s
 ```
 
@@ -86,7 +87,8 @@ npx pict-cli model.txt -s
 
 - Only short options are supported.
 - Slash-style syntax such as `/o:3` is not supported.
-- Exactly one model file path is required.
+- Exactly one model argument is required.
+- Use `-` as the model argument to read the model from standard input.
 
 ## License
 

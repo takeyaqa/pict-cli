@@ -1,7 +1,7 @@
 {
   "name": "pict-cli",
   "version": "0.1.0",
-  "description": "A CLI tool for PICT, a combinatorial testing tool developed by Microsoft. This project provides a command-line interface to generate test cases using PICT's algorithms, making it easier for developers to create comprehensive test suites for their applications.",
+  "description": "Node.js-friendly command-line tool for running PICT-style combinatorial test generation",
   "keywords": [
     "pict",
     "testing",

@@ -1,12 +1,8 @@
 # pict-cli
 
-`pict-cli` is a Node.js-friendly command-line tool for running PICT-style
-combinatorial test generation from npm, CI, or ad hoc shell usage.
+`pict-cli` is a Node.js-friendly command-line tool for running PICT-style combinatorial test generation from npm, CI, or ad hoc shell usage.
 
-This is an independent project by the package author and is not affiliated with
-Microsoft. It is inspired by Microsoft PICT and is intended to make similar
-workflows available in a Node.js environment, but it does not claim full
-command-line compatibility with the original `pict` executable.
+This is an independent project by the package author and is not affiliated with Microsoft. It is inspired by Microsoft PICT and is intended to make similar workflows available in a Node.js environment, but it does not claim full command-line compatibility with the original `pict` executable.
 
 ## Requirements
 
@@ -20,14 +16,13 @@ Install `pict-cli` globally if you want a persistent local command:
 npm install --global pict-cli
 ```
 
-Run it without a global install for one-off usage or CI steps:
+Run it without a global install for one-off usage:
 
 ```bash
 npx pict-cli <model-file>
 ```
 
-Use `npx` for ad hoc runs and CI jobs. Use a global install when you expect to
-run the command repeatedly on the same machine.
+Use `npx` for ad hoc runs. Use a global install when you expect to run the command repeatedly on the same machine.
 
 ## Quick Start
 
@@ -57,8 +52,7 @@ Linux	Chrome
 Linux	Firefox
 ```
 
-The generated result is written as tab-separated text. If you pass `-s`, the
-command prints model statistics instead of generated cases.
+The generated result is written as tab-separated text.
 
 ## CLI Usage
 
@@ -72,7 +66,7 @@ Usage: pict-cli model [options]
 | ----------- | ------------------------------------------------- |
 | `-o N\|max` | Order of combinations. Default: `2`.              |
 | `-d C`      | Separator for values. Default: `,`.               |
-| `-a C`      | Separator for aliases. Default: `\`.              |
+| `-a C`      | Separator for aliases. Default: `\|`.             |
 | `-n C`      | Negative value prefix. Default: `~`.              |
 | `-e file`   | File with seeding rows.                           |
 | `-r N`      | Randomize generation with seed `N`.               |
@@ -94,16 +88,18 @@ npx pict-cli model.txt -s
 - Slash-style syntax such as `/o:3` is not supported.
 - Exactly one model file path is required.
 
-## Relationship to Microsoft PICT
+## License
 
-Microsoft PICT is the original combinatorial testing tool that inspired this
-package. `pict-cli` brings a similar workflow to Node.js through npm
-distribution and a JavaScript runtime, but it is not an official Microsoft
-package and is not endorsed or supported by Microsoft.
+This project is licensed under the MIT License—see the [LICENSE](./LICENSE) file for details.
 
-## Project Links
+## Disclaimer
 
-- Issues: [github.com/takeyaqa/pict-cli/issues](https://github.com/takeyaqa/pict-cli/issues)
-- License: [MIT](https://github.com/takeyaqa/pict-cli/blob/main/LICENSE)
+pict-cli is provided "as is", without warranty of any kind. The authors are not liable for any damages arising from its use.
 
-Bug reports and compatibility gaps are welcome.
+Generated test cases do _not guarantee complete coverage_ or _the absence of defects_. Please supplement pairwise testing with other strategies as appropriate.
+
+pict-cli is an independent project and is not affiliated with Microsoft Corporation.
+
+---
+
+If you find pict-cli useful, please consider starring the repository.

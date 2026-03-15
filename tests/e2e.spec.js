@@ -9,11 +9,14 @@ import { after, before, describe, it } from "node:test";
 const CLI_PATH = resolve(cwd(), "bin/cli.js");
 
 function runCli(args, options = {}) {
+  const { env: optionsEnv, ...restOptions } = options;
+  const mergedEnv = { ...env, NODE_NO_WARNINGS: "1", ...(optionsEnv ?? {}) };
+
   return spawnSync(execPath, [CLI_PATH, ...args], {
     cwd: cwd(),
     encoding: "utf8",
-    env: { ...env, NODE_NO_WARNINGS: "1" },
-    ...options,
+    env: mergedEnv,
+    ...restOptions,
   });
 }
 

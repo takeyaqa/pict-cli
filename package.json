@@ -1,0 +1,62 @@
+{
+  "name": "pict-cli",
+  "version": "0.1.0",
+  "description": "A CLI tool for PICT, a combinatorial testing tool developed by Microsoft. This project provides a command-line interface to generate test cases using PICT's algorithms, making it easier for developers to create comprehensive test suites for their applications.",
+  "keywords": [
+    "pict",
+    "testing",
+    "testing-tools",
+    "test-case-generation",
+    "combinatorial-testing",
+    "pairwise",
+    "pairwise-testing"
+  ],
+  "homepage": "https://github.com/takeyaqa/pict-cli#readme",
+  "bugs": {
+    "url": "https://github.com/takeyaqa/pict-cli/issues"
+  },
+  "license": "MIT",
+  "author": "Takeshi Kishi",
+  "files": [
+    "bin"
+  ],
+  "bin": {
+    "pict-cli": "bin/cli.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takeyaqa/pict-cli.git"
+  },
+  "scripts": {
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "node --test tests/e2e.spec.js"
+  },
+  "dependencies": {
+    "@takeyaqa/pict-wasm": "3.7.4-wasm.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1"
+  },
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22"
+    },
+    "packageManager": [
+      {
+        "name": "pnpm",
+        "version": "^10"
+      }
+    ]
+  }
+}

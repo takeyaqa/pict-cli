@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 1
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      eslint-and-prettier:
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "eslint-config-prettier"
+          - "prettier"
+    ignore:
+      - dependency-name: "@takeyaqa/pict-wasm"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 1
+    commit-message:
+      prefix: "ci"
+      include: "scope"

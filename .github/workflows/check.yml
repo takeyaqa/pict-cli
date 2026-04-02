@@ -5,6 +5,9 @@ on:
 env:
   PNPM_VERSION: 10
 
+permissions:
+  contents: read
+
 jobs:
   formatcheck:
     runs-on: ubuntu-latest

@@ -36,7 +36,7 @@
     "test": "node --test tests/e2e.spec.js"
   },
   "dependencies": {
-    "@takeyaqa/pict-wasm": "3.7.4-wasm.17"
+    "@takeyaqa/pict-wasm": "3.7.4-wasm.18"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

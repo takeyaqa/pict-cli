@@ -1,4 +1,3 @@
-minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - "@takeyaqa/pict-wasm"
 trustPolicy: no-downgrade

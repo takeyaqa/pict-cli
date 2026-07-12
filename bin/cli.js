@@ -192,17 +192,12 @@ function buildRunConfig(rawArgs) {
     throw inputError("Exactly one model argument is required");
   }
 
-  const orderOfCombinations = getRequiredString(
-    parsed.values,
-    "o",
-    optionSources,
-  );
+  const orderOfCombinations = getRequiredString(parsed.values, "o", optionSources);
   if (
     orderOfCombinations !== undefined &&
     !(
       orderOfCombinations === "max" ||
-      (/^\d+$/.test(orderOfCombinations) &&
-        Number.parseInt(orderOfCombinations, 10) > 0)
+      (/^\d+$/.test(orderOfCombinations) && Number.parseInt(orderOfCombinations, 10) > 0)
     )
   ) {
     throw inputError(`Unknown option: ${optionSources.get("o")}`);
@@ -213,21 +208,9 @@ function buildRunConfig(rawArgs) {
     throw inputError(`Unknown option: ${optionSources.get("r")}`);
   }
 
-  const valueSeparator = getSingleCharacterValue(
-    parsed.values,
-    "d",
-    optionSources,
-  );
-  const aliasSeparator = getSingleCharacterValue(
-    parsed.values,
-    "a",
-    optionSources,
-  );
-  const negativeValuePrefix = getSingleCharacterValue(
-    parsed.values,
-    "n",
-    optionSources,
-  );
+  const valueSeparator = getSingleCharacterValue(parsed.values, "d", optionSources);
+  const aliasSeparator = getSingleCharacterValue(parsed.values, "a", optionSources);
+  const negativeValuePrefix = getSingleCharacterValue(parsed.values, "n", optionSources);
 
   return {
     modelPath: parsed.positionals[0],
@@ -236,9 +219,7 @@ function buildRunConfig(rawArgs) {
       ...(orderOfCombinations !== undefined
         ? {
             orderOfCombinations:
-              orderOfCombinations === "max"
-                ? "max"
-                : Number.parseInt(orderOfCombinations, 10),
+              orderOfCombinations === "max" ? "max" : Number.parseInt(orderOfCombinations, 10),
           }
         : {}),
       ...(valueSeparator !== undefined ? { valueSeparator } : {}),
@@ -260,10 +241,7 @@ async function readHostFile(filePath, errorCode) {
   try {
     return await readFile(filePath, "utf8");
   } catch {
-    throw new CliError(
-      errorCode,
-      `Input Error: Couldn't open file: ${filePath}`,
-    );
+    throw new CliError(errorCode, `Input Error: Couldn't open file: ${filePath}`);
   }
 }
 
@@ -278,12 +256,7 @@ async function readStdin() {
       resolve(text);
     });
     stdin.on("error", () => {
-      reject(
-        new CliError(
-          PictErrorCode.BadModel,
-          "Input Error: Couldn't read standard input",
-        ),
-      );
+      reject(new CliError(PictErrorCode.BadModel, "Input Error: Couldn't read standard input"));
     });
   });
 }
@@ -297,9 +270,7 @@ async function readModelText(modelArg) {
 }
 
 function formatResult(result) {
-  return [result.header, ...result.body]
-    .map((row) => row.join("\t"))
-    .join("\n");
+  return [result.header, ...result.body].map((row) => row.join("\t")).join("\n");
 }
 
 async function main(rawArgs) {

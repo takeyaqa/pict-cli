@@ -10,7 +10,7 @@ const CLI_PATH = resolve(cwd(), "bin/cli.js");
 
 function runCli(args, options = {}) {
   const { env: optionsEnv, ...restOptions } = options;
-  const mergedEnv = { ...env, NODE_NO_WARNINGS: "1", ...(optionsEnv ?? {}) };
+  const mergedEnv = { ...env, NODE_NO_WARNINGS: "1", ...optionsEnv };
 
   return spawnSync(execPath, [CLI_PATH, ...args], {
     cwd: cwd(),
@@ -81,12 +81,7 @@ A: x, y`,
     assert.equal(result.status, 0);
     assert.equal(result.stderr, "");
     assert.equal(outputLines[0], "A\tB");
-    assert.deepEqual(outputLines.slice(1).sort(), [
-      "0\tx",
-      "0\ty",
-      "1\tx",
-      "1\ty",
-    ]);
+    assert.deepEqual(outputLines.slice(1).sort(), ["0\tx", "0\ty", "1\tx", "1\ty"]);
   });
 
   it("runs a model from standard input when model is '-'", () => {
@@ -99,12 +94,7 @@ B: x, y`,
     assert.equal(result.status, 0);
     assert.equal(result.stderr, "");
     assert.equal(outputLines[0], "A\tB");
-    assert.deepEqual(outputLines.slice(1).sort(), [
-      "0\tx",
-      "0\ty",
-      "1\tx",
-      "1\ty",
-    ]);
+    assert.deepEqual(outputLines.slice(1).sort(), ["0\tx", "0\ty", "1\tx", "1\ty"]);
   });
 
   it("supports documented short options", () => {
@@ -153,68 +143,37 @@ B: x, y`,
     assert.equal(noArgsResult.status, 3);
     assert.ok(noArgsResult.stdout.includes("Usage: pict-cli model [options]"));
 
-    const duplicateOptionResult = runCli([
-      basicModelPath,
-      "-o",
-      "1",
-      "-o",
-      "2",
-    ]);
+    const duplicateOptionResult = runCli([basicModelPath, "-o", "1", "-o", "2"]);
     assert.equal(duplicateOptionResult.status, 3);
     assert.ok(
-      duplicateOptionResult.stderr.includes(
-        "Input Error: Option 'o' was provided more than once",
-      ),
+      duplicateOptionResult.stderr.includes("Input Error: Option 'o' was provided more than once"),
     );
 
     const missingModelResult = runCli(["-c"]);
     assert.equal(missingModelResult.status, 3);
-    assert.ok(
-      missingModelResult.stdout.includes("Usage: pict-cli model [options]"),
-    );
+    assert.ok(missingModelResult.stdout.includes("Usage: pict-cli model [options]"));
 
-    const extraPositionalResult = runCli([
-      basicModelPath,
-      caseSensitiveModelPath,
-    ]);
+    const extraPositionalResult = runCli([basicModelPath, caseSensitiveModelPath]);
     assert.equal(extraPositionalResult.status, 3);
     assert.ok(
-      extraPositionalResult.stderr.includes(
-        "Input Error: Exactly one model argument is required",
-      ),
+      extraPositionalResult.stderr.includes("Input Error: Exactly one model argument is required"),
     );
 
     const slashMissingValueResult = runCli([basicModelPath, "/o"]);
     assert.equal(slashMissingValueResult.status, 3);
-    assert.ok(
-      slashMissingValueResult.stderr.includes(
-        "Input Error: Unknown option: /o",
-      ),
-    );
+    assert.ok(slashMissingValueResult.stderr.includes("Input Error: Unknown option: /o"));
 
     const slashBooleanValueResult = runCli([basicModelPath, "/c:true"]);
     assert.equal(slashBooleanValueResult.status, 3);
-    assert.ok(
-      slashBooleanValueResult.stderr.includes(
-        "Input Error: Unknown option: /c:true",
-      ),
-    );
+    assert.ok(slashBooleanValueResult.stderr.includes("Input Error: Unknown option: /c:true"));
 
     const unknownSlashOptionResult = runCli([basicModelPath, "/x"]);
     assert.equal(unknownSlashOptionResult.status, 3);
-    assert.ok(
-      unknownSlashOptionResult.stderr.includes(
-        "Input Error: Unknown option: /x",
-      ),
-    );
+    assert.ok(unknownSlashOptionResult.stderr.includes("Input Error: Unknown option: /x"));
 
     const unknownSlashValueOptionResult = runCli([basicModelPath, "/x:1"]);
     assert.equal(unknownSlashValueOptionResult.status, 3);
-    assert.ok(
-      unknownSlashValueOptionResult.stderr.includes(
-        "Input Error: Unknown option: /x:1",
-      ),
-    );
+    assert.ok(unknownSlashValueOptionResult.stderr.includes("Input Error: Unknown option: /x:1"));
 
     const duplicateMixedOptionResult = runCli([basicModelPath, "-c", "/c"]);
     assert.equal(duplicateMixedOptionResult.status, 3);
@@ -226,27 +185,19 @@ B: x, y`,
 
     const equalsOptionResult = runCli([basicModelPath, "-o=1"]);
     assert.equal(equalsOptionResult.status, 3);
-    assert.ok(
-      equalsOptionResult.stderr.includes("Input Error: Unknown option: -o=1"),
-    );
+    assert.ok(equalsOptionResult.stderr.includes("Input Error: Unknown option: -o=1"));
 
     const colonOptionResult = runCli([basicModelPath, "-o:1"]);
     assert.equal(colonOptionResult.status, 3);
-    assert.ok(
-      colonOptionResult.stderr.includes("Input Error: Unknown option: -o:1"),
-    );
+    assert.ok(colonOptionResult.stderr.includes("Input Error: Unknown option: -o:1"));
 
     const longOptionResult = runCli([basicModelPath, "--order", "1"]);
     assert.equal(longOptionResult.status, 3);
-    assert.ok(
-      longOptionResult.stderr.includes("Input Error: Unknown option: --order"),
-    );
+    assert.ok(longOptionResult.stderr.includes("Input Error: Unknown option: --order"));
 
     const bareRandomResult = runCli([basicModelPath, "-r"]);
     assert.equal(bareRandomResult.status, 3);
-    assert.ok(
-      bareRandomResult.stderr.includes("Input Error: Unknown option: -r"),
-    );
+    assert.ok(bareRandomResult.stderr.includes("Input Error: Unknown option: -r"));
 
     const extraPositionalWithStdinResult = runCli(["-", basicModelPath]);
     assert.equal(extraPositionalWithStdinResult.status, 3);
@@ -265,17 +216,13 @@ B: x, y`,
     const missingModelResult = runCli([missingModelPath]);
     assert.equal(missingModelResult.status, 4);
     assert.ok(
-      missingModelResult.stderr.includes(
-        `Input Error: Couldn't open file: ${missingModelPath}`,
-      ),
+      missingModelResult.stderr.includes(`Input Error: Couldn't open file: ${missingModelPath}`),
     );
 
     const missingSeedResult = runCli([basicModelPath, "-e", missingSeedPath]);
     assert.equal(missingSeedResult.status, 6);
     assert.ok(
-      missingSeedResult.stderr.includes(
-        `Input Error: Couldn't open file: ${missingSeedPath}`,
-      ),
+      missingSeedResult.stderr.includes(`Input Error: Couldn't open file: ${missingSeedPath}`),
     );
 
     const invalidStdinModelResult = runCli(["-"], {

@@ -3,13 +3,13 @@
   "version": "0.2.5",
   "description": "Node.js-friendly command-line tool for running PICT-style combinatorial test generation",
   "keywords": [
-    "pict",
-    "testing",
-    "testing-tools",
-    "test-case-generation",
     "combinatorial-testing",
     "pairwise",
-    "pairwise-testing"
+    "pairwise-testing",
+    "pict",
+    "test-case-generation",
+    "testing",
+    "testing-tools"
   ],
   "homepage": "https://github.com/takeyaqa/pict-cli#readme",
   "bugs": {
@@ -17,46 +17,44 @@
   },
   "license": "MIT",
   "author": "Takeshi Kishi",
-  "files": [
-    "bin"
-  ],
-  "bin": {
-    "pict-cli": "bin/cli.js"
-  },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takeyaqa/pict-cli.git"
   },
+  "bin": {
+    "pict-cli": "bin/cli.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "type": "module",
   "scripts": {
-    "fmt": "prettier --write .",
-    "fmt:check": "prettier --check .",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "test": "node --test tests/e2e.spec.js"
   },
   "dependencies": {
     "@takeyaqa/pict-wasm": "3.7.4-wasm.26"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.6.0",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.9.4"
-  },
-  "engines": {
-    "node": "^22 || ^24"
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0"
   },
   "devEngines": {
-    "runtime": {
-      "name": "node",
-      "version": "^22"
-    },
     "packageManager": [
       {
         "name": "pnpm",
         "version": "^10"
       }
-    ]
+    ],
+    "runtime": {
+      "name": "node",
+      "version": "^22"
+    }
+  },
+  "engines": {
+    "node": "^22 || ^24"
   }
 }

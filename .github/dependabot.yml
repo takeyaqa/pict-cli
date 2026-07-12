@@ -11,12 +11,10 @@ updates:
       prefix: "build"
       include: "scope"
     groups:
-      eslint-and-prettier:
+      oxc:
         patterns:
-          - "@eslint/*"
-          - "eslint"
-          - "eslint-config-prettier"
-          - "prettier"
+          - "oxfmt"
+          - "oxlint"
     ignore:
       - dependency-name: "@takeyaqa/pict-wasm"
   - package-ecosystem: "github-actions"

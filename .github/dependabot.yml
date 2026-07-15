@@ -6,7 +6,7 @@ updates:
       interval: "monthly"
     versioning-strategy: increase
     cooldown:
-      default-days: 1
+      default-days: 3
     commit-message:
       prefix: "build"
       include: "scope"
@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: "monthly"
     cooldown:
-      default-days: 1
+      default-days: 3
     commit-message:
       prefix: "ci"
       include: "scope"

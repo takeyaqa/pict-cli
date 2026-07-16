@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  formatcheck:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -23,22 +23,9 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm run fmt:check
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          cache: true
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: "package.json"
-          cache: pnpm
-      - run: pnpm install
       - run: pnpm run lint
   test:
-    needs: [formatcheck, lint]
+    needs: check
     strategy:
       fail-fast: false
       matrix:

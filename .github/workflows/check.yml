@@ -17,7 +17,7 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
           cache: true
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: "package.json"
           cache: pnpm
@@ -37,7 +37,7 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
           cache: true
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm

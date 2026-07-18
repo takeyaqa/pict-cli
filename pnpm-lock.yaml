@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@takeyaqa/pict-wasm':
-        specifier: 3.7.4-wasm.26
-        version: 3.7.4-wasm.26
+        specifier: 3.7.4-wasm.27
+        version: 3.7.4-wasm.27
     devDependencies:
       oxfmt:
         specifier: ^0.59.0
@@ -265,8 +265,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@takeyaqa/pict-wasm@3.7.4-wasm.26':
-    resolution: {integrity: sha512-N/+x5gqBQW0eMnsZfC5Onghueo4d5PchxP79ciLmS2XfZ9RKRBsdXh4AiErLZ47lum/ar9UYp8HzAFltU5enIQ==}
+  '@takeyaqa/pict-wasm@3.7.4-wasm.27':
+    resolution: {integrity: sha512-B6fScHM0wV48g2d+c148S6hQxSs65XiKm7P25tdSIuwJHuQlpRzJB0gDzsZpw2JX29DXIJLkt4xRK98TbCY92A==}
     engines: {node: ^22 || ^24}
 
   oxfmt@0.59.0:
@@ -415,7 +415,7 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.74.0':
     optional: true
 
-  '@takeyaqa/pict-wasm@3.7.4-wasm.26': {}
+  '@takeyaqa/pict-wasm@3.7.4-wasm.27': {}
 
   oxfmt@0.59.0:
     dependencies:

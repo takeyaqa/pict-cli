@@ -24,8 +24,6 @@ jobs:
           node-version-file: "package.json"
           cache: pnpm
           registry-url: https://registry.npmjs.org
-      - name: Update npm to latest version
-        run: npm install -g npm@latest
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm registry

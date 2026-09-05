@@ -2,9 +2,6 @@ name: check
 on:
   pull_request:
 
-env:
-  PNPM_VERSION: 10
-
 permissions:
   contents: read
 
@@ -15,7 +12,6 @@ jobs:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
-          version: ${{ env.PNPM_VERSION }}
           cache: true
       - uses: actions/setup-node@v7
         with:
@@ -35,7 +31,6 @@ jobs:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
-          version: ${{ env.PNPM_VERSION }}
           cache: true
       - uses: actions/setup-node@v7
         with:

@@ -15,11 +15,7 @@
         "editor.defaultFormatter": "oxc.oxc-vscode",
         "oxc.fmt.configPath": ".oxfmtrc.json"
       },
-      "extensions": [
-        "github.vscode-github-actions",
-        "oxc.oxc-vscode",
-        "-dbaeumer.vscode-eslint"
-      ]
+      "extensions": ["github.vscode-github-actions", "oxc.oxc-vscode", "-dbaeumer.vscode-eslint"]
     }
   }
 }

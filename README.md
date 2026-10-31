@@ -6,7 +6,7 @@ This is an independent project by the package author and is not affiliated with 
 
 ## Requirements
 
-- Node.js `^22 || ^24`
+- Node.js `^22 || ^24 || ^26`
 
 ## Installation
 

@@ -2,3 +2,4 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - "@takeyaqa/pict-wasm"
 trustPolicy: no-downgrade
+pmOnFail: ignore

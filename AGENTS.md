@@ -39,7 +39,7 @@ pnpm run test
 ## Key Conventions
 
 - **Git Workflow**: Always create a new branch from `main` before starting any task
-- **Prettier** for formatting
+- **oxfmt** for formatting
 - **Commit Messages**: Use Conventional Commits format (e.g., `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`)
 - **Before committing** - Always run `pnpm run fmt`, `pnpm run lint`, and `pnpm run test`
 - **Ignore `pnpm-lock.yaml`** - Always skip this file during code review and pull request creation
